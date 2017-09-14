@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">Online MP3</string>
+    <string name="title_activity_base">BaseActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="play_more_apps">https://play.google.com/store/apps/developer?id=Vishal+M+Parmar</string>
+    <string name="admob_intertestial_id">ca-app-pub-8356404931736973/5876987192</string>
+    <string name="admob_banner_id">ca-app-pub-8356404931736973/4400253997</string>
+
+    <!--if you want rtl change value of isRTL to true else false-->
+    <string name="isRTL">false</string>
+
+
+    <!--change all this text in your language-->
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="menu_about">About Us</string>
+    <string name="error">Error</string>
+    <string name="success">Success</string>
+    <string name="server_no_conn">Error, Server not connected</string>
+    <string name="loading">Loading..</string>
+    <string name="recently_played">Recently Played</string>
+    <string name="search">Search</string>
+    <string name="no_data_found">No Data Found</string>
+    <string name="download_desti">Online MP3</string>
+    <string name="internet_not_conn">Internet not connected</string>
+    <string name="artist">Artist</string>
+    <string name="category">Category</string>
+    <string name="developedby">Developed By</string>
+    <string name="home">Home</string>
+    <string name="press_again_exit">Press again to exit</string>
+    <string name="categories">Categories</string>
+    <string name="favourite">Favourite</string>
+    <string name="removed_fav">Removed from favourite</string>
+    <string name="added_fav">Added to fav</string>
+    <string name="share_song">Share Song</string>
+    <string name="song">Song</string>
+    <string name="downloading">Downloading</string>
+    <string name="already_download">File already downloaded</string>
+    <string name="volume">Volume</string>
+    <string name="cannot_use_save">Cannot use save feature without requested permission</string>
+    <string name="version">Version</string>
+    <string name="author">Author</string>
+    <string name="company">Company</string>
+    <string name="email">Email</string>
+    <string name="website">Website</string>
+    <string name="contact">Contact</string>
+    <string name="desc">Description</string>
+    <string name="privacy">Privacy Policy</string>
+    <string name="rate_app">Rate App</string>
+    <string name="share_app">Share App</string>
+    <string name="more_app">More Apps</string>
+    <string name="downloads">Downloads</string>
+</resources>

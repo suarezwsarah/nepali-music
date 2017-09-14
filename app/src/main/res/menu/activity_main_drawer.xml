@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@mipmap/home"
+        android:title="@string/home" />
+    <item
+        android:id="@+id/nav_cat"
+        android:icon="@mipmap/cat"
+        android:title="@string/category" />
+    <item
+        android:id="@+id/nav_artist"
+        android:icon="@mipmap/artist"
+        android:title="@string/artist" />
+
+    <item
+        android:id="@+id/nav_fav"
+        android:icon="@mipmap/heart"
+        android:title="@string/favourite" />
+
+    <item
+        android:id="@+id/nav_downlaod"
+        android:icon="@mipmap/download"
+        android:title="@string/downloads" />
+
+    <item
+        android:id="@+id/nav_rate"
+        android:icon="@mipmap/rate"
+        android:title="@string/rate_app" />
+
+    <item
+        android:id="@+id/nav_share"
+        android:icon="@mipmap/share_nav"
+        android:title="@string/share_app" />
+
+    <item
+        android:id="@+id/nav_more"
+        android:icon="@mipmap/more"
+        android:title="@string/more_app" />
+
+    <item
+        android:id="@+id/nav_about"
+        android:icon="@mipmap/about"
+        android:title="@string/menu_about" />
+
+    <item
+        android:id="@+id/nav_privacy"
+        android:icon="@mipmap/privacy"
+        android:title="@string/privacy" />
+
+    <item
+        android:id="@+id/nav_dummy"
+        android:title="" />
+
+</menu>
