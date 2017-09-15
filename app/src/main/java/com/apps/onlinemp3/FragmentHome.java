@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,18 +29,13 @@ import com.apps.utils.ZProgressHUD;
 import com.google.android.gms.ads.AdListener;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class FragmentHome extends Fragment {
 
     DBHelper dbHelper;
     RecyclerView recyclerView;
-    ArrayList<ItemSong> arrayList;
+    ArrayList<ItemSong> songList;
     ArrayList<ItemSong> arrayList_recent;
     AdapterRecent adapterRecent;
     ZProgressHUD progressHUD;
@@ -53,7 +47,6 @@ public class FragmentHome extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
 
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         setHasOptionsMenu(true);
@@ -72,9 +65,8 @@ public class FragmentHome extends Fragment {
         viewpager.setClipToPadding(false);
         viewpager.setPageMargin(40);
         viewpager.setClipChildren(false);
-//        viewpager.setPageTransformer(true,new BackgroundToForegroundTransformer());
 
-        arrayList = new ArrayList<ItemSong>();
+        songList = new ArrayList<ItemSong>();
         arrayList_recent = new ArrayList<ItemSong>();
         recyclerView = (RecyclerView)rootView.findViewById(R.id.recyclerView_home_recent);
         linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
@@ -114,80 +106,44 @@ public class FragmentHome extends Fragment {
         @Override
         protected void onPreExecute() {
             progressHUD.show();
-            arrayList.clear();
+            songList.clear();
             super.onPreExecute();
         }
 
         @Override
         protected String doInBackground(String... strings) {
-            try {
-                String json = JsonUtils.getJSONString(strings[0]);
-
-                JSONObject mainJson = new JSONObject(json);
-                JSONArray jsonArray = mainJson.getJSONArray(Constant.TAG_ROOT);
-                JSONObject objJson = null;
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    objJson = jsonArray.getJSONObject(i);
-
-                    String id = objJson.getString(Constant.TAG_ID);
-                    String cid = objJson.getString(Constant.TAG_CAT_ID);
-                    String cname = objJson.getString(Constant.TAG_CAT_NAME);
-                    String artist = objJson.getString(Constant.TAG_ARTIST);
-                    String name = objJson.getString(Constant.TAG_SONG_NAME);
-                    String url = objJson.getString(Constant.TAG_MP3_URL);
-                    String desc = objJson.getString(Constant.TAG_DESC);
-                    String duration = objJson.getString(Constant.TAG_DURATION);
-                    String image = objJson.getString(Constant.TAG_THUMB_B).replace(" ","%20");
-                    String image_small = objJson.getString(Constant.TAG_THUMB_S).replace(" ","%20");
-
-                    ItemSong objItem = new ItemSong(id,cid,cname,artist,url,image,image_small,name,duration,desc);
-                    arrayList.add(objItem);
-                }
-
-                return "1";
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return "0";
-            } catch (Exception ee) {
-                ee.printStackTrace();
-                return "0";
-            }
-
+            return SongLoader.doLoadSong(strings[0], songList);
         }
 
         @Override
         protected void onPostExecute(String s) {
-            if(s.equals("1")) {
-                progressHUD.dismissWithSuccess(getResources().getString(R.string.success));
-//                setLatestVariables(0);
-
-                if(Constant.isAppFirst) {
-                    if(arrayList.size()>0) {
-                        Constant.isAppFirst = false;
-                        Constant.arrayList_play.addAll(arrayList);
-                        ((MainActivity)getActivity()).changeText(arrayList.get(0).getMp3Name(),arrayList.get(0).getCategoryName(),1,arrayList.size(),arrayList.get(0).getDuration(),arrayList.get(0).getImageBig(),"home");
-                        Constant.context = getActivity();
-                    }
-                }
-
-                viewpager.setAdapter(adapter);
-
-                loadRecent();
-//                adapterPagerTrending = new AdapterPagerTrending(getActivity(),Constant.arrayList_trending);
-//                viewPager_trending.setAdapter(adapterPagerTrending);
-
-//                adapterTopStories = new AdapterTopStories(getActivity(),Constant.arrayList_topstories);
-//                listView_topstories.setAdapter(adapterTopStories);
-
-//                setListViewHeightBasedOnChildren(listView_topstories);
-
-
-
+            boolean isSuccessFull = s.equals("1");
+            if(isSuccessFull) {
+                handleSuccessSongLoad();
             } else {
-                progressHUD.dismissWithFailure(getResources().getString(R.string.error));
-                Toast.makeText(getActivity(), getResources().getString(R.string.server_no_conn), Toast.LENGTH_SHORT).show();
+                handleSongLoadFailure();
             }
             super.onPostExecute(s);
+        }
+
+        private void handleSongLoadFailure() {
+            progressHUD.dismissWithFailure(getResources().getString(R.string.error));
+            Toast.makeText(getActivity(), getResources().getString(R.string.server_no_conn), Toast.LENGTH_SHORT).show();
+        }
+
+        private void handleSuccessSongLoad() {
+            progressHUD.dismissWithSuccess(getResources().getString(R.string.success));
+            if(Constant.isAppFirst) {
+                if(songList.size()>0) {
+                    Constant.isAppFirst = false;
+                    Constant.arrayList_play.addAll(songList);
+                    ((MainActivity)getActivity()).changeText(songList.get(0).getMp3Name(), songList.get(0).getCategoryName(),1, songList.size(), songList.get(0).getDuration(), songList.get(0).getImageBig(),"home");
+                    Constant.context = getActivity();
+                }
+            }
+
+            viewpager.setAdapter(adapter);
+            loadRecent();
         }
     }
 
@@ -217,7 +173,7 @@ public class FragmentHome extends Fragment {
 
         @Override
         public int getCount() {
-            return arrayList.size();
+            return songList.size();
         }
 
         @Override
@@ -236,11 +192,11 @@ public class FragmentHome extends Fragment {
             TextView cat = (TextView) imageLayout.findViewById(R.id.textView_pager_home_cat);
             RelativeLayout rl = (RelativeLayout)imageLayout.findViewById(R.id.rl_homepager);
 
-            title.setText(arrayList.get(position).getMp3Name());
-            cat.setText(arrayList.get(position).getCategoryName());
+            title.setText(songList.get(position).getMp3Name());
+            cat.setText(songList.get(position).getCategoryName());
 
             Picasso.with(getActivity())
-                .load(arrayList.get(position).getImageBig())
+                .load(songList.get(position).getImageBig())
                 .placeholder(R.mipmap.app_icon)
                 .into(imageView, new Callback() {
                     @Override
@@ -297,9 +253,9 @@ public class FragmentHome extends Fragment {
         Constant.isOnline = true;
         int pos = viewpager.getCurrentItem();
         Constant.arrayList_play.clear();
-        Constant.arrayList_play.addAll(arrayList);
+        Constant.arrayList_play.addAll(songList);
         Constant.playPos = pos;
-        ((MainActivity)getActivity()).changeText(arrayList.get(pos).getMp3Name(),arrayList.get(pos).getCategoryName(),pos+1,arrayList.size(),arrayList.get(pos).getDuration(),arrayList.get(pos).getImageBig(),"home");
+        ((MainActivity)getActivity()).changeText(songList.get(pos).getMp3Name(), songList.get(pos).getCategoryName(),pos+1, songList.size(), songList.get(pos).getDuration(), songList.get(pos).getImageBig(),"home");
 
         Constant.context = getActivity();
         if(pos == 0) {

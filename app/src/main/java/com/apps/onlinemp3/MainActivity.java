@@ -175,6 +175,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (fragmentMap.get(id) != null) {
                 loadFrag(fragment, getResources().getString(fragmentTitleMap.get(id)), fm);
                 item.setCheckable(true);
+                if (id == R.id.nav_downlaod) {
+                    initiSlidingUpPanel();
+                }
             } else if (id == R.id.nav_rate) {
                 final String appName = getPackageName();//your application package name i.e play store application url
                 try {
@@ -410,6 +413,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imageView_shuffle = (ImageView) findViewById(R.id.btn_shuffle);
         imageView_playpause = (ImageView) findViewById(R.id.btn_play);
         imageView_download = (ImageView) findViewById(R.id.imageView_download);
+        if (Constant.frag.equals("download")) {
+            imageView_download.setVisibility(View.INVISIBLE);
+        }
         imageView_volume = (ImageView) findViewById(R.id.imageView_volume);
         imageView_heart = (ImageView) findViewById(R.id.ivLike);
 
@@ -457,7 +463,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         slidepanelchildtwo_topviewone.setVisibility(View.VISIBLE);
         slidepanelchildtwo_topviewtwo.setVisibility(View.INVISIBLE);
 
-        slidepanelchildtwo_topviewone.setOnClickListener(v -> mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED));
+        slidepanelchildtwo_topviewone.setOnClickListener((v) ->{
+            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+        });
 
         slidepanelchildtwo_topviewtwo.setOnClickListener(v -> {
             if(!slideUp.isVisible()) {
