@@ -31,7 +31,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -67,13 +66,13 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    FragmentManager fm;
-    private NavigationView navigationView;
+    private final FragmentManager fm = getSupportFragmentManager();
     private TextView textView;
 
     private DBHelper dbHelper;
@@ -94,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public View view_round, view_desc;
 
-    public ImageView btn_playpausePanel;
+    public ImageView btnPlayPausePanel;
     public AppCompatSeekBar seekBar;
     public ViewPager viewpager;
     ImagePagerAdapter adapter;
@@ -105,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Boolean mRecentlyBackPressed = false;
     String website,email, desc, applogo, appname, appversion, appauthor, appcontact, privacy, developedby;
     SlideUp slideUp;
-    public static WebView webView_song_desc;
+    private static WebView webViewSongDesc;
     JsonUtils utils;
 
     @Override
@@ -113,10 +112,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.GINGERBREAD)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ResourceManager.add("fragmentMgr", getSupportFragmentManager());
+        ResourceManager.add("resource", getResources());
+        ResourceManager.add("isAppOpen", true);
+        ResourceManager.add("context", MainActivity.this);
 
         Constant.isAppOpen = true;
         Constant.context = MainActivity.this;
@@ -139,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        fm = getSupportFragmentManager();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -147,28 +151,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                if(slideOffset == 0) {
-//                    slidepanelchildtwo_topviewone.setVisibility(View.VISIBLE);
-                } else {
-//                    slidepanelchildtwo_topviewone.setVisibility(View.GONE);
-                }
                 super.onDrawerSlide(drawerView, slideOffset);
             }
-        };;
+        };
+
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        webView_song_desc = (WebView)findViewById(R.id.webview_song_desc);
+        webViewSongDesc = (WebView)findViewById(R.id.webview_song_desc);
         view_desc = (View)findViewById(R.id.slideView);
         textView = (TextView) findViewById(R.id.textView_developedby);
         textView.setText(getResources().getString(R.string.developedby) + " - " + Constant.itemAbout.getDevelopedby());
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
-//        View headerView = navigationView.getHeaderView(0);
-//        navigationView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
-//        headerView.getBackground().setColorFilter(0x80000000, PorterDuff.Mode.MULTIPLY);
-//        navigationView.getBackground().setAlpha(100);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Map<Integer, Fragment> fragmentMap = FragmentUtil.getFragmentMap();
+
+        navigationView.setNavigationItemSelectedListener((item) -> {
+            int id = item.getItemId();
+            Fragment fragment = fragmentMap.get(id);
+
+            Map<Integer, Integer> fragmentTitleMap = FragmentUtil.getFragmentTitleMap();
+
+            if (fragmentMap.get(id) != null) {
+                loadFrag(fragment, getResources().getString(fragmentTitleMap.get(id)), fm);
+                item.setCheckable(true);
+            } else if (id == R.id.nav_rate) {
+                final String appName = getPackageName();//your application package name i.e play store application url
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("market://details?id="
+                                    + appName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("http://play.google.com/store/apps/details?id="
+                                    + appName)));
+                }
+            } else if (id == R.id.nav_share) {
+                Intent ishare = new Intent(Intent.ACTION_SEND);
+                ishare.setType("text/plain");
+                ishare.putExtra(Intent.EXTRA_TEXT,getResources().getString(R.string.app_name) + " - http://play.google.com/store/apps/details?id="+getPackageName());
+                startActivity(ishare);
+            } else if (id == R.id.nav_more) {
+                startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(getString(R.string.play_more_apps))));
+            } else if (id == R.id.nav_about) {
+                Intent intent = new Intent(MainActivity.this,AboutActivity.class);
+                startActivity(intent);
+
+            } else if (id == R.id.nav_privacy) {
+                openPrivacyDialog();
+            }
+
+            DrawerLayout myDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            myDrawer.closeDrawer(GravityCompat.START);
+
+            return true;
+        });
 
         FragmentHome f1 = new FragmentHome();
         loadFrag(f1,getResources().getString(R.string.home),fm);
@@ -235,16 +273,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         slideUp.setGesturesEnabled(true);
         slideUp.setInterpolator(new OvershootInterpolator(1));
-        slideUp.addSlideListener(new SlideUp.Listener.Visibility() {
-            @Override
-            public void onVisibilityChanged(int visibility) {
-                if(visibility == View.VISIBLE) {
-//                    txt_songDesc.setText(Constant.arrayList_play.get(Constant.playPos).getDescription());
-                    touchDesc();
-                    mLayout.setTouchEnabled(false);
-                } else {
-                    mLayout.setTouchEnabled(true);
-                }
+        slideUp.addSlideListener((SlideUp.Listener.Visibility) visibility -> {
+            if(visibility == View.VISIBLE) {
+                touchDesc();
+                mLayout.setTouchEnabled(false);
+            } else {
+                mLayout.setTouchEnabled(true);
             }
         });
 
@@ -287,67 +321,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-//        item.setChecked(true);
-//        item.setCheckable(true);
-//        navigationView.setCheckedItem(item.getItemId());
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            FragmentHome fh = new FragmentHome();
-            loadFrag(fh,getResources().getString(R.string.home),fm);
-            item.setCheckable(true);
-        } else if (id == R.id.nav_cat) {
-            FragmentCat fcat = new FragmentCat();
-            loadFrag(fcat,getResources().getString(R.string.categories),fm);
-            item.setCheckable(true);
-        } else if (id == R.id.nav_artist) {
-            FragmentArtist fart = new FragmentArtist();
-            loadFrag(fart,getResources().getString(R.string.artist),fm);
-            item.setCheckable(true);
-        } else if (id == R.id.nav_fav) {
-            FragmentFav ffav = new FragmentFav();
-            loadFrag(ffav,getResources().getString(R.string.favourite),fm);
-            item.setCheckable(true);
-        } else if (id == R.id.nav_downlaod) {
-            FragmentDownloads fdownload = new FragmentDownloads();
-            loadFrag(fdownload,getResources().getString(R.string.downloads),fm);
-            item.setCheckable(true);
-        } else if (id == R.id.nav_rate) {
-            final String appName = getPackageName();//your application package name i.e play store application url
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("market://details?id="
-                                + appName)));
-            } catch (android.content.ActivityNotFoundException anfe) {
-                startActivity(new Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("http://play.google.com/store/apps/details?id="
-                                + appName)));
-            }
-        } else if (id == R.id.nav_share) {
-            Intent ishare = new Intent(Intent.ACTION_SEND);
-            ishare.setType("text/plain");
-            ishare.putExtra(Intent.EXTRA_TEXT,getResources().getString(R.string.app_name) + " - http://play.google.com/store/apps/details?id="+getPackageName());
-            startActivity(ishare);
-        } else if (id == R.id.nav_more) {
-            startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(getString(R.string.play_more_apps))));
-        } else if (id == R.id.nav_about) {
-            Intent intent = new Intent(MainActivity.this,AboutActivity.class);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_privacy) {
-            openPrivacyDialog();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-
-        return true;
-    }
 
     public void loadFrag(Fragment f1, String name, FragmentManager fm) {
 
@@ -398,7 +371,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         WebView webview = (WebView)dialog.findViewById(R.id.webview);
         webview.getSettings().setJavaScriptEnabled(true);
-//		webview.loadUrl("file:///android_asset/privacy.html");
         String mimeType = "text/html;charset=UTF-8";
         String encoding = "utf-8";
 
@@ -447,15 +419,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewpager.setClipToPadding(false);
         viewpager.setPageMargin(50);
         viewpager.setClipChildren(false);
-//        viewpager.setPageTransformer(true,new DefaultTransformer());
-
 
         seekBar = (AppCompatSeekBar) findViewById(R.id.audio_progress_control);
 
-//        seekBar.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-//        seekBar.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
-
-        btn_playpausePanel = (ImageView) findViewById(R.id.bottombar_play);
+        btnPlayPausePanel = (ImageView) findViewById(R.id.bottombar_play);
         imageView_Favorite = (ImageView) findViewById(R.id.bottombar_img_Favorite);
         imageView_share = (ImageView) findViewById(R.id.bottombar_shareicon);
         imageView_song_desc = (ImageView) findViewById(R.id.bottombar_img_desc);
@@ -465,7 +432,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final int coloraccent = typedvaluecoloraccent.data;
         seekBar.setProgress(0);
 
-//        audio_progress.setOnValueChangedListener(this);
         imageView_backward.setOnClickListener(this);
         imageView_forward.setOnClickListener(this);
         imageView_repeat.setOnClickListener(this);
@@ -473,13 +439,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         imageView_Favorite.setOnClickListener(this);
         imageView_share.setOnClickListener(this);
         imageView_playpause.setOnClickListener(this);
-        btn_playpausePanel.setOnClickListener(this);
+        btnPlayPausePanel.setOnClickListener(this);
         imageView_download.setOnClickListener(this);
         imageView_volume.setOnClickListener(this);
         imageView_song_desc.setOnClickListener(this);
 
-//        btn_playpausePanel.Pause();
-//        btn_playpause.Pause();
 
         txt_artist_small = (TextView) findViewById(R.id.txt_artist_small);
         txt_song_small = (TextView) findViewById(R.id.txt_songname_small);
@@ -493,26 +457,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         slidepanelchildtwo_topviewone.setVisibility(View.VISIBLE);
         slidepanelchildtwo_topviewtwo.setVisibility(View.INVISIBLE);
 
-        slidepanelchildtwo_topviewone.setOnClickListener(new View.OnClickListener() {
+        slidepanelchildtwo_topviewone.setOnClickListener(v -> mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED));
 
-            @Override
-            public void onClick(View v) {
-                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-
+        slidepanelchildtwo_topviewtwo.setOnClickListener(v -> {
+            if(!slideUp.isVisible()) {
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            } else {
+                slideUp.toggle();
             }
-        });
 
-        slidepanelchildtwo_topviewtwo.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if(!slideUp.isVisible()) {
-                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                } else {
-                    slideUp.toggle();
-                }
-
-            }
         });
 
         findViewById(R.id.bottombar_play).setOnClickListener(this);
@@ -542,7 +495,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-//        mLayout.setAnchorPoint(0.01f);
         mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
@@ -550,15 +502,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     slidepanelchildtwo_topviewone.setVisibility(View.VISIBLE);
                     slidepanelchildtwo_topviewtwo.setVisibility(View.INVISIBLE);
                 } else if (slideOffset > 0.0f && slideOffset < 1.0f) {
-                    // if (isExpand) {
-                    // slidepanelchildtwo_topviewone.setAlpha(1.0f);
-                    // slidepanelchildtwo_topviewtwo.setAlpha(1.0f -
-                    // slideOffset);
-                    // } else {
-                    // slidepanelchildtwo_topviewone.setAlpha(1.0f -
-                    // slideOffset);
-                    // slidepanelchildtwo_topviewtwo.setAlpha(1.0f);
-                    // }
 
                 } else {
                     slidepanelchildtwo_topviewone.setVisibility(View.INVISIBLE);
@@ -713,12 +656,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             rl_loading.setVisibility(View.INVISIBLE);
             imageView_playpause.setVisibility(View.VISIBLE);
             imageView_playpause.setImageDrawable(getResources().getDrawable(R.drawable.selector_pause));
-            btn_playpausePanel.setImageDrawable(getResources().getDrawable(R.drawable.selector_pause));
+            btnPlayPausePanel.setImageDrawable(getResources().getDrawable(R.drawable.selector_pause));
         }
         imageView_backward.setEnabled(!isBuffer);
         imageView_forward.setEnabled(!isBuffer);
         imageView_download.setEnabled(!isBuffer);
-        btn_playpausePanel.setEnabled(!isBuffer);
+        btnPlayPausePanel.setEnabled(!isBuffer);
         seekBar.setEnabled(!isBuffer);
     }
 
@@ -768,10 +711,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void changePlayPauseIcon(Boolean isPlay) {
         if(!isPlay) {
             imageView_playpause.setImageDrawable(getResources().getDrawable(R.drawable.selector_play));
-            btn_playpausePanel.setImageDrawable(getResources().getDrawable(R.drawable.selector_play));
+            btnPlayPausePanel.setImageDrawable(getResources().getDrawable(R.drawable.selector_play));
         } else {
             imageView_playpause.setImageDrawable(getResources().getDrawable(R.drawable.selector_pause));
-            btn_playpausePanel.setImageDrawable(getResources().getDrawable(R.drawable.selector_pause));
+            btnPlayPausePanel.setImageDrawable(getResources().getDrawable(R.drawable.selector_pause));
         }
     }
 
@@ -1000,16 +943,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         protected void onPostExecute(String s) {
             if (s.equals("1")) {
                 Intent intent = new Intent(MainActivity.this,PlayerService.class);
-//                if(Constant.isPlayed) {
-//                    if (Constant.isPlaying) {
-//                        intent.setAction(PlayerService.ACTION_PAUSE);
-//                    } else {
-//                        intent.setAction(PlayerService.ACTION_PLAY);
-//                    }
-                    //        changePlayPauseIcon(Constant.isPlaying);
-//                } else {
-                    intent.setAction(PlayerService.ACTION_FIRST_PLAY);
-//                }
+                intent.setAction(PlayerService.ACTION_FIRST_PLAY);
                 startService(intent);
             }
             super.onPostExecute(s);
@@ -1115,7 +1049,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public static void touchDesc() {
-        if(webView_song_desc != null) {
+        if(webViewSongDesc != null) {
             String mimeType = "text/html;charset=UTF-8";
             String encoding = "utf-8";
             String text = "<html><head>"
@@ -1125,19 +1059,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     + Constant.arrayList_play.get(Constant.playPos).getDescription()
                     + "</body></html>";
 
-            webView_song_desc.loadData(text, mimeType, encoding);
+            webViewSongDesc.loadData(text, mimeType, encoding);
         }
     }
 
     protected void onStart() {
-        // TODO Auto-generated method stub
         super.onStart();
         EasyTracker.getInstance(this).activityStart(this);
     }
 
     @Override
     protected void onStop() {
-        // TODO Auto-generated method stub
         super.onStop();
         EasyTracker.getInstance(this).activityStop(this);
     }
