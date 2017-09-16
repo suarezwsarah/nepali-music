@@ -316,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             FragmentDownloads fdownload = new FragmentDownloads();
             loadFrag(fdownload,getResources().getString(R.string.downloads),fm);
             item.setCheckable(true);
-        } else if (id == R.id.nav_rate) {
+        }/* else if (id == R.id.nav_rate) {
             final String appName = getPackageName();//your application package name i.e play store application url
             try {
                 startActivity(new Intent(Intent.ACTION_VIEW,
@@ -335,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(ishare);
         } else if (id == R.id.nav_more) {
             startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(getString(R.string.play_more_apps))));
-        } else if (id == R.id.nav_about) {
+        } */else if (id == R.id.nav_about) {
             Intent intent = new Intent(MainActivity.this,AboutActivity.class);
             startActivity(intent);
 

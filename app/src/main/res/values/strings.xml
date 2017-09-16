@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Online MP3</string>
+    <string name="app_name">Mero Music</string>
     <string name="title_activity_base">BaseActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -24,7 +24,7 @@
     <string name="recently_played">Recently Played</string>
     <string name="search">Search</string>
     <string name="no_data_found">No Data Found</string>
-    <string name="download_desti">Online MP3</string>
+    <string name="download_desti">mero-music</string>
     <string name="internet_not_conn">Internet not connected</string>
     <string name="artist">Artist</string>
     <string name="category">Category</string>

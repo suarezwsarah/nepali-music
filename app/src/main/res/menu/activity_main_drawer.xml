@@ -24,7 +24,7 @@
         android:icon="@mipmap/download"
         android:title="@string/downloads" />
 
-    <item
+<!--    <item
         android:id="@+id/nav_rate"
         android:icon="@mipmap/rate"
         android:title="@string/rate_app" />
@@ -37,7 +37,7 @@
     <item
         android:id="@+id/nav_more"
         android:icon="@mipmap/more"
-        android:title="@string/more_app" />
+        android:title="@string/more_app" />-->
 
     <item
         android:id="@+id/nav_about"
