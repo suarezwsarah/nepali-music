@@ -1,4 +1,4 @@
-<com.apps.utils.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sdlxmusic.utils.MyLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_pager"
     android:layout_width="match_parent"
@@ -20,4 +20,4 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 
-</com.apps.utils.MyLinearLayout>
+</com.sdlxmusic.utils.MyLinearLayout>
