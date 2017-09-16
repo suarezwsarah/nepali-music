@@ -339,7 +339,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(MainActivity.this,AboutActivity.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_privacy) {
+        } else if(id == R.id.songreq_about) {
+            Intent intent = new Intent(MainActivity.this, FragmentSongRequest.class);
+            startActivity(intent);
+        }
+        else if (id == R.id.nav_privacy) {
             openPrivacyDialog();
         }
 

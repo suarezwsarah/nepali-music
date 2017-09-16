@@ -24,6 +24,7 @@
         android:icon="@mipmap/download"
         android:title="@string/downloads" />
 
+
 <!--    <item
         android:id="@+id/nav_rate"
         android:icon="@mipmap/rate"
@@ -38,6 +39,11 @@
         android:id="@+id/nav_more"
         android:icon="@mipmap/more"
         android:title="@string/more_app" />-->
+    <item
+        android:id="@+id/songreq_about"
+        android:icon="@mipmap/artist"
+        android:title="@string/request_song"
+        />
 
     <item
         android:id="@+id/nav_about"

@@ -33,6 +33,10 @@
             android:launchMode="singleTop" />
         <activity android:name="com.sdlxmusic.onlinemp3.AboutActivity" />
 
+
+        <activity android:name="com.sdlxmusic.onlinemp3.FragmentSongRequest" />
+
+
         <service
             android:name="com.sdlxmusic.onlinemp3.PlayerService"
             android:stopWithTask="true"
