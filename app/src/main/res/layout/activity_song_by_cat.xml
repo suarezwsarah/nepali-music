@@ -3,7 +3,7 @@
     android:id="@+id/activity_song_by_cat"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg">
+    android:background="@drawable/bg_song_request">
 
     <ImageView
         android:id="@+id/imageView_back"

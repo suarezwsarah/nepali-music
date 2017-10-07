@@ -314,8 +314,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
 
         } else if (id == R.id.songreq_about) {
-            Intent intent = new Intent(MainActivity.this, FragmentSongRequest.class);
-            startActivity(intent);
+            FragmentSongRequest fragmentSongRequest = new FragmentSongRequest();
+            loadFrag(fragmentSongRequest, "songRequest", fm);
+            //Intent intent = new Intent(MainActivity.this, FragmentSongRequest.class);
+            //startActivity(intent);
         } else if (id == R.id.nav_privacy) {
             openPrivacyDialog();
         }
@@ -672,20 +674,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void setRepeat() {
-        if (Constant.isRepeat) {
-            Constant.isRepeat = false;
-            imageView_repeat.setImageDrawable(getResources().getDrawable(R.mipmap.repeat));
-        } else {
-            Constant.isRepeat = true;
-            imageView_repeat.setImageDrawable(getResources().getDrawable(R.mipmap.repeat_hover));
-        }
+        Constant.isRepeat = !Constant.isRepeat;
+        int drawableId = Constant.isRepeat ? R.mipmap.repeat_hover : R.mipmap.repeat;
+        imageView_repeat.setImageDrawable(getDrawable(drawableId));
+
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setShuffle() {
         PlayerConstant.setShuffle(!PlayerConstant.isShuffle());
         int drawlableId = PlayerConstant.isShuffle() ? R.mipmap.shuffle_hover : R.mipmap.shuffle;
-        imageView_shuffle.setImageDrawable(getApplicationContext().getDrawable(drawlableId));
+        imageView_shuffle.setImageDrawable(getDrawable(drawlableId));
     }
 
     public void next() {

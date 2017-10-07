@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#2962ff</color>
+    <color name="colorPrimaryDark">#0039cb</color>
+    <color name="textColor">#ffffff</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#ffffff</color>
     <color name="white80">#80ffffff</color>
@@ -11,6 +12,12 @@
     <color name="black_nav">#cc000000</color>
     <color name="abcdef">#abcdef</color>
     <color name="nav_checked">#dc473a</color>
+
+    <color name="bg_gray_background">#F5F5F6</color>
+
+    <color name="bg_song_request">#f77300</color>
+    <color name="secondaryColor">#0337e1</color>
+
     <color name="secondary_progress">#FD8177</color>
     <color name="player_Artist">#686075</color>
     <color name="statusBar">#27262e</color>
