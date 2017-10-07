@@ -45,18 +45,18 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sdlxmusic.constants.PlayerConstant;
-import com.sdlxmusic.item.ItemAbout;
-import com.sdlxmusic.item.ItemSong;
-import com.sdlxmusic.utils.Constant;
-import com.sdlxmusic.utils.DBHelper;
-import com.sdlxmusic.utils.JsonUtils;
 import com.github.siyamed.shapeimageview.RoundedImageView;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.mancj.slideup.SlideUp;
+import com.sdlxmusic.constants.PlayerConstant;
+import com.sdlxmusic.item.ItemAbout;
+import com.sdlxmusic.item.ItemSong;
+import com.sdlxmusic.utils.Constant;
+import com.sdlxmusic.utils.DBHelper;
+import com.sdlxmusic.utils.JsonUtils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -86,8 +86,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ImageView img_bottom_slideone;
     private ImageView img_bottom_slidetwo;
 
-    public TextView txt_songname, txt_artistname, txt_song_no, txt_totaltime, txt_duration,txt_artist_small, txt_song_small,
-            txt_playesongname_slidetoptwo,txt_songartistname_slidetoptwo;
+    public TextView txt_songname, txt_artistname, txt_song_no, txt_totaltime, txt_duration, txt_artist_small, txt_song_small,
+            txt_playesongname_slidetoptwo, txt_songartistname_slidetoptwo;
 
     public ImageView imageView_backward, imageView_download, imageView_volume, imageView_forward, imageView_shuffle, imageView_repeat, imageView_playpause,
             imageView_Favorite, imageView_heart, imageView_share, imageView_song_desc;
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     InterstitialAd mInterstitial;
     Handler mExitHandler = new Handler();
     Boolean mRecentlyBackPressed = false;
-    String website,email, desc, applogo, appname, appversion, appauthor, appcontact, privacy, developedby;
+    String website, email, desc, applogo, appname, appversion, appauthor, appcontact, privacy, developedby;
     SlideUp slideUp;
     public static WebView webView_song_desc;
     JsonUtils utils;
@@ -130,8 +130,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAdView.loadAd(adRequest);
         loadInter();
 
-        if(Constant.itemAbout == null) {
-            Constant.itemAbout = new ItemAbout("","","","","","","","","","");
+        if (Constant.itemAbout == null) {
+            Constant.itemAbout = new ItemAbout("", "", "", "", "", "", "", "", "", "");
         }
 
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
@@ -147,19 +147,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                if(slideOffset == 0) {
+                if (slideOffset == 0) {
 //                    slidepanelchildtwo_topviewone.setVisibility(View.VISIBLE);
                 } else {
 //                    slidepanelchildtwo_topviewone.setVisibility(View.GONE);
                 }
                 super.onDrawerSlide(drawerView, slideOffset);
             }
-        };;
+        };
+        ;
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        webView_song_desc = (WebView)findViewById(R.id.webview_song_desc);
-        view_desc = (View)findViewById(R.id.slideView);
+        webView_song_desc = (WebView) findViewById(R.id.webview_song_desc);
+        view_desc = (View) findViewById(R.id.slideView);
         textView = (TextView) findViewById(R.id.textView_developedby);
         textView.setText(getResources().getString(R.string.developedby) + " - " + Constant.itemAbout.getDevelopedby());
         navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -171,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        navigationView.getBackground().setAlpha(100);
 
         FragmentHome f1 = new FragmentHome();
-        loadFrag(f1,getResources().getString(R.string.home),fm);
+        loadFrag(f1, getResources().getString(R.string.home), fm);
         getSupportActionBar().setTitle(getResources().getString(R.string.home));
 
         initiSlidingUpPanel();
@@ -206,23 +207,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
 
-        if(Constant.isFromNoti) {
+        if (Constant.isFromNoti) {
             changePlayPauseIcon(Constant.isPlaying);
-            changeText(Constant.arrayList_play.get(Constant.playPos).getMp3Name(),Constant.arrayList_play.get(Constant.playPos).getCategoryName(),Constant.playPos+1,Constant.arrayList_play.size(),Constant.arrayList_play.get(Constant.playPos).getDuration(),Constant.arrayList_play.get(Constant.playPos).getImageBig(),"cat");
+            changeText(Constant.arrayList_play.get(Constant.playPos).getMp3Name(), Constant.arrayList_play.get(Constant.playPos).getCategoryName(), Constant.playPos + 1, Constant.arrayList_play.size(), Constant.arrayList_play.get(Constant.playPos).getDuration(), Constant.arrayList_play.get(Constant.playPos).getImageBig(), "cat");
             seekUpdation();
-        } else if(Constant.isFromPush) {
+        } else if (Constant.isFromPush) {
             if (JsonUtils.isNetworkAvailable(MainActivity.this)) {
                 new LoadSong().execute(Constant.URL_SONG + Constant.pushID);
             } else {
 
             }
-        } else if(Constant.isPlaying) {
+        } else if (Constant.isPlaying) {
             changePlayPauseIcon(Constant.isPlaying);
-            changeText(Constant.arrayList_play.get(Constant.playPos).getMp3Name(),Constant.arrayList_play.get(Constant.playPos).getCategoryName(),Constant.playPos+1,Constant.arrayList_play.size(),Constant.arrayList_play.get(Constant.playPos).getDuration(),Constant.arrayList_play.get(Constant.playPos).getImageBig(),"cat");
+            changeText(Constant.arrayList_play.get(Constant.playPos).getMp3Name(), Constant.arrayList_play.get(Constant.playPos).getCategoryName(), Constant.playPos + 1, Constant.arrayList_play.size(), Constant.arrayList_play.get(Constant.playPos).getDuration(), Constant.arrayList_play.get(Constant.playPos).getImageBig(), "cat");
             seekUpdation();
         }
 
-        if(Constant.itemAbout.getAppName().equals("")) {
+        if (Constant.itemAbout.getAppName().equals("")) {
             if (JsonUtils.isNetworkAvailable(MainActivity.this)) {
                 new MyTask().execute(Constant.APP_DETAILS_URL);
             }
@@ -238,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         slideUp.addSlideListener(new SlideUp.Listener.Visibility() {
             @Override
             public void onVisibilityChanged(int visibility) {
-                if(visibility == View.VISIBLE) {
+                if (visibility == View.VISIBLE) {
 //                    txt_songDesc.setText(Constant.arrayList_play.get(Constant.playPos).getDescription());
                     touchDesc();
                     mLayout.setTouchEnabled(false);
@@ -254,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Runnable mExitRunnable = new Runnable() {
         @Override
         public void run() {
-            mRecentlyBackPressed=false;
+            mRecentlyBackPressed = false;
         }
     };
 
@@ -265,18 +266,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         } else if (slideUp.isVisible()) {
             slideUp.toggle();
-        }else if(mLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
+        } else if (mLayout.getPanelState().equals(SlidingUpPanelLayout.PanelState.EXPANDED)) {
             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        } else if(Constant.isBackStack) {
+        } else if (Constant.isBackStack) {
             Constant.isBackStack = false;
             super.onBackPressed();
         } else {
             if (mRecentlyBackPressed) {
-            mExitHandler.removeCallbacks(mExitRunnable);
-//            mExitHandler = null;
-//                    if (mInterstitialAd.isLoaded()) {
-//                        mInterstitialAd.show();
-//                    }
+                mExitHandler.removeCallbacks(mExitRunnable);
                 mRecentlyBackPressed = false;
                 moveTaskToBack(true);
             } else {
@@ -290,60 +287,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-//        item.setChecked(true);
-//        item.setCheckable(true);
-//        navigationView.setCheckedItem(item.getItemId());
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
             FragmentHome fh = new FragmentHome();
-            loadFrag(fh,getResources().getString(R.string.home),fm);
+            loadFrag(fh, getResources().getString(R.string.home), fm);
             item.setCheckable(true);
         } else if (id == R.id.nav_cat) {
             FragmentCat fcat = new FragmentCat();
-            loadFrag(fcat,getResources().getString(R.string.categories),fm);
+            loadFrag(fcat, getResources().getString(R.string.categories), fm);
             item.setCheckable(true);
         } else if (id == R.id.nav_artist) {
             FragmentArtist fart = new FragmentArtist();
-            loadFrag(fart,getResources().getString(R.string.artist),fm);
+            loadFrag(fart, getResources().getString(R.string.artist), fm);
             item.setCheckable(true);
         } else if (id == R.id.nav_fav) {
             FragmentFav ffav = new FragmentFav();
-            loadFrag(ffav,getResources().getString(R.string.favourite),fm);
+            loadFrag(ffav, getResources().getString(R.string.favourite), fm);
             item.setCheckable(true);
         } else if (id == R.id.nav_downlaod) {
             FragmentDownloads fdownload = new FragmentDownloads();
-            loadFrag(fdownload,getResources().getString(R.string.downloads),fm);
+            loadFrag(fdownload, getResources().getString(R.string.downloads), fm);
             item.setCheckable(true);
-        }/* else if (id == R.id.nav_rate) {
-            final String appName = getPackageName();//your application package name i.e play store application url
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("market://details?id="
-                                + appName)));
-            } catch (android.content.ActivityNotFoundException anfe) {
-                startActivity(new Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("http://play.google.com/store/apps/details?id="
-                                + appName)));
-            }
-        } else if (id == R.id.nav_share) {
-            Intent ishare = new Intent(Intent.ACTION_SEND);
-            ishare.setType("text/plain");
-            ishare.putExtra(Intent.EXTRA_TEXT,getResources().getString(R.string.app_name) + " - http://play.google.com/store/apps/details?id="+getPackageName());
-            startActivity(ishare);
-        } else if (id == R.id.nav_more) {
-            startActivity(new Intent(Intent.ACTION_VIEW,Uri.parse(getString(R.string.play_more_apps))));
-        } */else if (id == R.id.nav_about) {
-            Intent intent = new Intent(MainActivity.this,AboutActivity.class);
+        } else if (id == R.id.nav_about) {
+            Intent intent = new Intent(MainActivity.this, AboutActivity.class);
             startActivity(intent);
 
-        } else if(id == R.id.songreq_about) {
+        } else if (id == R.id.songreq_about) {
             Intent intent = new Intent(MainActivity.this, FragmentSongRequest.class);
             startActivity(intent);
-        }
-        else if (id == R.id.nav_privacy) {
+        } else if (id == R.id.nav_privacy) {
             openPrivacyDialog();
         }
 
@@ -355,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void loadFrag(Fragment f1, String name, FragmentManager fm) {
 
-        if(Constant.isBackStack) {
+        if (Constant.isBackStack) {
             FragmentManager fragm = getSupportFragmentManager();
             for (int i = 0; i < fragm.getBackStackEntryCount(); ++i) {
                 fm.popBackStack();
@@ -370,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         getSupportActionBar().setTitle(name);
 
-        if(mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+        if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         }
     }
@@ -382,7 +355,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onDestroy() {
-        if(!Constant.isPlaying) {
+        if (!Constant.isPlaying) {
             stopService(new Intent(getApplicationContext(), PlayerService.class));
         }
         Constant.isAppOpen = false;
@@ -391,8 +364,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void openPrivacyDialog() {
         Dialog dialog;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            dialog = new Dialog(MainActivity.this,android.R.style.Theme_Material_Light_Dialog_Alert);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog = new Dialog(MainActivity.this, android.R.style.Theme_Material_Light_Dialog_Alert);
         } else {
             dialog = new Dialog(MainActivity.this);
         }
@@ -400,13 +373,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.layout_privacy);
 
-        WebView webview = (WebView)dialog.findViewById(R.id.webview);
+        WebView webview = (WebView) dialog.findViewById(R.id.webview);
         webview.getSettings().setJavaScriptEnabled(true);
-//		webview.loadUrl("file:///android_asset/privacy.html");
         String mimeType = "text/html;charset=UTF-8";
         String encoding = "utf-8";
 
-        if(Constant.itemAbout != null) {
+        if (Constant.itemAbout != null) {
             String text = "<html><head>"
                     + "<style> body{color: #000 !important;text-align:left}"
                     + "</style></head>"
@@ -423,10 +395,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initiSlidingUpPanel() {
-        rl_loading = (RelativeLayout)findViewById(R.id.rl_loading);
-        rl_topviewone = (RelativeLayout)findViewById(R.id.rl_topviewone);
-        rl_dragview = (RelativeLayout)findViewById(R.id.include_sliding_panel_childtwo);
-        view_round  = findViewById(R.id.vBgLike);
+        rl_loading = (RelativeLayout) findViewById(R.id.rl_loading);
+        rl_topviewone = (RelativeLayout) findViewById(R.id.rl_topviewone);
+        rl_dragview = (RelativeLayout) findViewById(R.id.include_sliding_panel_childtwo);
+        view_round = findViewById(R.id.vBgLike);
         img_bottom_slideone = (ImageView) findViewById(R.id.img_bottom_slideone);
         img_bottom_slidetwo = (ImageView) findViewById(R.id.img_bottom_slidetwo);
 
@@ -446,18 +418,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         imageView_heart = (ImageView) findViewById(R.id.ivLike);
 
         adapter = new ImagePagerAdapter();
-        viewpager = (ViewPager)findViewById(R.id.viewPager_song) ;
-        viewpager.setPadding(100,0,100,0);
+        viewpager = (ViewPager) findViewById(R.id.viewPager_song);
+        viewpager.setPadding(100, 0, 100, 0);
         viewpager.setClipToPadding(false);
         viewpager.setPageMargin(50);
         viewpager.setClipChildren(false);
-//        viewpager.setPageTransformer(true,new DefaultTransformer());
 
 
         seekBar = (AppCompatSeekBar) findViewById(R.id.audio_progress_control);
-
-//        seekBar.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-//        seekBar.getThumb().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
 
         btn_playpausePanel = (ImageView) findViewById(R.id.bottombar_play);
         imageView_Favorite = (ImageView) findViewById(R.id.bottombar_img_Favorite);
@@ -466,10 +434,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         TypedValue typedvaluecoloraccent = new TypedValue();
         getTheme().resolveAttribute(R.attr.colorAccent, typedvaluecoloraccent, true);
-        final int coloraccent = typedvaluecoloraccent.data;
         seekBar.setProgress(0);
 
-//        audio_progress.setOnValueChangedListener(this);
         imageView_backward.setOnClickListener(this);
         imageView_forward.setOnClickListener(this);
         imageView_repeat.setOnClickListener(this);
@@ -482,8 +448,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         imageView_volume.setOnClickListener(this);
         imageView_song_desc.setOnClickListener(this);
 
-//        btn_playpausePanel.Pause();
-//        btn_playpause.Pause();
 
         txt_artist_small = (TextView) findViewById(R.id.txt_artist_small);
         txt_song_small = (TextView) findViewById(R.id.txt_songname_small);
@@ -510,7 +474,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onClick(View v) {
-                if(!slideUp.isVisible()) {
+                if (!slideUp.isVisible()) {
                     mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 } else {
                     slideUp.toggle();
@@ -537,16 +501,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 try {
                     Intent intent = new Intent(MainActivity.this, PlayerService.class);
                     intent.setAction(PlayerService.ACTION_SEEKTO);
-                    intent.putExtra("seekto", JsonUtils.getSeekFromPercentage(progress,JsonUtils.calculateTime(Constant.arrayList_play.get(Constant.playPos).getDuration())));
+                    intent.putExtra("seekto", JsonUtils.getSeekFromPercentage(progress, JsonUtils.calculateTime(Constant.arrayList_play.get(Constant.playPos).getDuration())));
                     startService(intent);
-                } catch (Exception e)
-                {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    Log.d("On SeekBar ", e.getLocalizedMessage());
                 }
             }
         });
 
-//        mLayout.setAnchorPoint(0.01f);
         mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
@@ -554,15 +516,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     slidepanelchildtwo_topviewone.setVisibility(View.VISIBLE);
                     slidepanelchildtwo_topviewtwo.setVisibility(View.INVISIBLE);
                 } else if (slideOffset > 0.0f && slideOffset < 1.0f) {
-                    // if (isExpand) {
-                    // slidepanelchildtwo_topviewone.setAlpha(1.0f);
-                    // slidepanelchildtwo_topviewtwo.setAlpha(1.0f -
-                    // slideOffset);
-                    // } else {
-                    // slidepanelchildtwo_topviewone.setAlpha(1.0f -
-                    // slideOffset);
-                    // slidepanelchildtwo_topviewtwo.setAlpha(1.0f);
-                    // }
 
                 } else {
                     slidepanelchildtwo_topviewone.setVisibility(View.INVISIBLE);
@@ -581,7 +534,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bottombar_img_Favorite:
-                if(Constant.isOnline) {
+                if (Constant.isOnline) {
                     JsonUtils.animateHeartButton(view);
                     JsonUtils.animatePhotoLike(view_round, imageView_heart);
                     view.setSelected(!view.isSelected());
@@ -614,7 +567,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 songDesc();
                 break;
             case R.id.imageView_download:
-                if(Constant.isOnline) {
+                if (Constant.isOnline) {
                     download();
                 } else {
                     Toast.makeText(MainActivity.this, getResources().getString(R.string.already_download), Toast.LENGTH_SHORT).show();
@@ -635,7 +588,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         txt_artistname.setText(aname);
         txt_songname.setText(sname);
-        txt_song_no.setText(pos+"/"+total);
+        txt_song_no.setText(pos + "/" + total);
 
         txt_playesongname_slidetoptwo.setText(sname);
         txt_songartistname_slidetoptwo.setText(aname);
@@ -650,16 +603,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         checkFav();
 
-        if(!page.equals(Constant.loadedSongPage) || !page.equals("")) {
+        if (!page.equals(Constant.loadedSongPage) || !page.equals("")) {
             viewpager.setAdapter(adapter);
         }
 
-//        Log.e("scroll",String.valueOf(Constant.isScrolled));
-//        if(!Constant.isScrolled) {
         viewpager.setCurrentItem(Constant.playPos);
-//        } else {
-//            Constant.isScrolled = false;
-//        }
     }
 
     public void changeText(String sname, String aname, int pos, int total, String totaltime, Bitmap image, String page) {
@@ -671,7 +619,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         txt_artistname.setText(aname);
         txt_songname.setText(sname);
-        txt_song_no.setText(pos+"/"+total);
+        txt_song_no.setText(pos + "/" + total);
 
         txt_playesongname_slidetoptwo.setText(sname);
         txt_songartistname_slidetoptwo.setText(aname);
@@ -681,36 +629,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         checkFav();
 
-        if(!page.equals(Constant.loadedSongPage) || !page.equals("")) {
+        if (!page.equals(Constant.loadedSongPage) || !page.equals("")) {
             viewpager.setAdapter(adapter);
         }
 
         viewpager.setCurrentItem(Constant.playPos);
     }
 
-    private Runnable run = new Runnable()
-    {
-        @Override public void run()
-        {
+    private Runnable run = new Runnable() {
+        @Override
+        public void run() {
             seekUpdation();
         }
     };
 
-    public void seekUpdation()
-    {
-//        seekBar.setMax(100);
-        seekBar.setProgress(JsonUtils.getProgressPercentage(Constant.exoPlayer.getCurrentPosition(),JsonUtils.calculateTime(Constant.arrayList_play.get(Constant.playPos).getDuration())));
+    public void seekUpdation() {
+        seekBar.setProgress(JsonUtils.getProgressPercentage(Constant.exoPlayer.getCurrentPosition(), JsonUtils.calculateTime(Constant.arrayList_play.get(Constant.playPos).getDuration())));
         txt_duration.setText(JsonUtils.milliSecondsToTimer(Constant.exoPlayer.getCurrentPosition()));
-        Log.e("duration",""+JsonUtils.milliSecondsToTimer(Constant.exoPlayer.getCurrentPosition()));
+        Log.e("duration", "" + JsonUtils.milliSecondsToTimer(Constant.exoPlayer.getCurrentPosition()));
         seekBar.setSecondaryProgress(Constant.exoPlayer.getBufferedPercentage());
-        if(Constant.isPlaying && Constant.isAppOpen) {
+        if (Constant.isPlaying && Constant.isAppOpen) {
             seekHandler.postDelayed(run, 500);
         }
     }
 
     public void isBuffering(Boolean isBuffer) {
         Constant.isPlaying = !isBuffer;
-        if(isBuffer) {
+        if (isBuffer) {
             rl_loading.setVisibility(View.VISIBLE);
             imageView_playpause.setVisibility(View.INVISIBLE);
         } else {
@@ -727,7 +672,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void setRepeat() {
-        if(Constant.isRepeat) {
+        if (Constant.isRepeat) {
             Constant.isRepeat = false;
             imageView_repeat.setImageDrawable(getResources().getDrawable(R.mipmap.repeat));
         } else {
@@ -756,8 +701,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void playPause() {
-        Intent intent = new Intent(MainActivity.this,PlayerService.class);
-        if(Constant.isPlayed) {
+        Intent intent = new Intent(MainActivity.this, PlayerService.class);
+        if (Constant.isPlayed) {
             if (Constant.isPlaying) {
                 intent.setAction(PlayerService.ACTION_PAUSE);
             } else {
@@ -770,7 +715,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void changePlayPauseIcon(Boolean isPlay) {
-        if(!isPlay) {
+        if (!isPlay) {
             imageView_playpause.setImageDrawable(getResources().getDrawable(R.drawable.selector_play));
             btn_playpausePanel.setImageDrawable(getResources().getDrawable(R.drawable.selector_play));
         } else {
@@ -780,7 +725,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void fav() {
-        if(Constant.isFav) {
+        if (Constant.isFav) {
             dbHelper.removeFromFav(Constant.arrayList_play.get(Constant.playPos).getId());
             Toast.makeText(MainActivity.this, getResources().getString(R.string.removed_fav), Toast.LENGTH_SHORT).show();
             Constant.isFav = false;
@@ -800,7 +745,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void changeFav() {
-        if(Constant.isFav) {
+        if (Constant.isFav) {
             imageView_Favorite.setImageDrawable(getResources().getDrawable(R.drawable.fav_hover));
         } else {
             imageView_Favorite.setImageDrawable(getResources().getDrawable(R.drawable.fav));
@@ -812,8 +757,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         private LayoutInflater inflater;
 
         private ImagePagerAdapter() {
-            // TODO Auto-generated constructor stub
-
             inflater = getLayoutInflater();
         }
 
@@ -835,7 +778,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             RoundedImageView imageView = (RoundedImageView) imageLayout.findViewById(R.id.image);
             final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
 
-            if(Constant.arrayList_play.get(position).getImageBig() != null) {
+            if (Constant.arrayList_play.get(position).getImageBig() != null) {
 
                 Picasso.with(MainActivity.this)
                         .load(Constant.arrayList_play.get(position).getImageBig())
@@ -868,13 +811,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void shareSong() {
-        if(Constant.isOnline) {
+        if (Constant.isOnline) {
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
             sharingIntent.setType("text/plain");
             sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getResources().getString(R.string.share_song));
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, getResources().getString(R.string.song) + " - " + Constant.arrayList_play.get(Constant.playPos).getMp3Name() + "\n\n" + getResources().getString(R.string.artist) + " - " + Constant.arrayList_play.get(Constant.playPos).getArtist() + "\n\n" + Constant.arrayList_play.get(Constant.playPos).getMp3Url());
             startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_song)));
-        }  else {
+        } else {
             Uri uri = Uri.parse(Constant.arrayList_play.get(Constant.playPos).getMp3Url());
             Intent share = new Intent(Intent.ACTION_SEND);
             share.setType("audio/*");
@@ -890,13 +833,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void download() {
         File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + getString(R.string.download_desti));
 
-        if(!root.exists()) {
+        if (!root.exists()) {
             root.mkdirs();
         }
 
-        File file = new File(root,Constant.arrayList_play.get(Constant.playPos).getMp3Name()+".mp3");
+        File file = new File(root, Constant.arrayList_play.get(Constant.playPos).getMp3Name() + ".mp3");
 
-        if(!file.exists()) {
+        if (!file.exists()) {
             String url = Constant.arrayList_play.get(Constant.playPos).getMp3Url();
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
             request.setDescription(getResources().getString(R.string.downloading) + " - " + Constant.arrayList_play.get(Constant.playPos).getMp3Name());
@@ -922,9 +865,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         dialog.setContentView(R.layout.layout_dailog_volume);
         dialog.setTitle(getResources().getString(R.string.volume));
 
-        SeekBar seekBar = (SeekBar)dialog.findViewById(R.id.seekBar_volume);
+        SeekBar seekBar = (SeekBar) dialog.findViewById(R.id.seekBar_volume);
         seekBar.setMax(am.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
-        int volume_level= am.getStreamVolume(AudioManager.STREAM_MUSIC);
+        int volume_level = am.getStreamVolume(AudioManager.STREAM_MUSIC);
         seekBar.setProgress(volume_level);
 
 
@@ -986,7 +929,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     String thumb = objJson.getString(Constant.TAG_THUMB_B).replace(" ", "%20");
                     String thumb_small = objJson.getString(Constant.TAG_THUMB_B).replace(" ", "%20");
 
-                    ItemSong objItem = new ItemSong(id, cid, cname,artist, url, thumb, thumb_small, name, duration, desc);
+                    ItemSong objItem = new ItemSong(id, cid, cname, artist, url, thumb, thumb_small, name, duration, desc);
                     Constant.arrayList_play.add(objItem);
                 }
 
@@ -1003,39 +946,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPostExecute(String s) {
             if (s.equals("1")) {
-                Intent intent = new Intent(MainActivity.this,PlayerService.class);
-//                if(Constant.isPlayed) {
-//                    if (Constant.isPlaying) {
-//                        intent.setAction(PlayerService.ACTION_PAUSE);
-//                    } else {
-//                        intent.setAction(PlayerService.ACTION_PLAY);
-//                    }
-                    //        changePlayPauseIcon(Constant.isPlaying);
-//                } else {
-                    intent.setAction(PlayerService.ACTION_FIRST_PLAY);
-//                }
+                Intent intent = new Intent(MainActivity.this, PlayerService.class);
+                intent.setAction(PlayerService.ACTION_FIRST_PLAY);
                 startService(intent);
             }
             super.onPostExecute(s);
         }
     }
 
-    public void setStatusColor()
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
+    public void setStatusColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.statusBar));
         }
     }
 
-    public void checkPer()
-    {
-        if ((ContextCompat.checkSelfPermission(MainActivity.this,"android.permission.WRITE_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED)) {
+    public void checkPer() {
+        if ((ContextCompat.checkSelfPermission(MainActivity.this, "android.permission.WRITE_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED)) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{"android.permission.WRITE_EXTERNAL_STORAGE","android.permission.READ_PHONE_STATE"},
+                requestPermissions(new String[]{"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_PHONE_STATE"},
                         1);
             }
         } else {
@@ -1063,7 +994,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private	class MyTask extends AsyncTask<String, Void, String> {
+    private class MyTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -1089,7 +1020,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 try {
                     JSONObject mainJson = new JSONObject(result);
                     JSONArray jsonArray = mainJson.getJSONArray(Constant.TAG_ROOT);
-                    JSONObject  c = null;
+                    JSONObject c = null;
                     for (int i = 0; i < jsonArray.length(); i++) {
                         c = jsonArray.getJSONObject(i);
 
@@ -1104,13 +1035,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         privacy = c.getString("app_privacy_policy");
                         developedby = c.getString("app_developed_by");
 
-                        Constant.itemAbout = new ItemAbout(appname,applogo,desc,appversion,appauthor,appcontact,email,website,privacy,developedby);
+                        Constant.itemAbout = new ItemAbout(appname, applogo, desc, appversion, appauthor, appcontact, email, website, privacy, developedby);
                         textView.setText(getResources().getString(R.string.developedby) + " - " + Constant.itemAbout.getDevelopedby());
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(MainActivity.this, getResources().getString(R.string.server_no_conn), Toast.LENGTH_SHORT).show();
-                } catch (Exception e ) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(MainActivity.this, getResources().getString(R.string.server_no_conn), Toast.LENGTH_SHORT).show();
                 }
@@ -1119,7 +1050,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public static void touchDesc() {
-        if(webView_song_desc != null) {
+        if (webView_song_desc != null) {
             String mimeType = "text/html;charset=UTF-8";
             String encoding = "utf-8";
             String text = "<html><head>"

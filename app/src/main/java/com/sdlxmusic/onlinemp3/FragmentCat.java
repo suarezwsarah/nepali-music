@@ -69,20 +69,26 @@ public class FragmentCat extends Fragment {
             public void onItemClick(View view, int position) {
                 Constant.isBackStack = true;
 
-                FragmentManager fm = getFragmentManager();
-                FragmentSongByCat f1 = new FragmentSongByCat();
-                FragmentTransaction ft = fm.beginTransaction();
+                FragmentManager fm = getFragmentManager(); // get a reference to fragment manager
+
+
+                FragmentSongByCat fragmentSongByCat = new FragmentSongByCat();
+
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
 
                 Bundle bundl = new Bundle();
                 bundl.putString("cid", arrayList.get(getPosition(adapterCat.getID(position))).getCategoryId());
                 bundl.putString("cname", arrayList.get(getPosition(adapterCat.getID(position))).getCategoryName());
-                f1.setArguments(bundl);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                ft.hide(getFragmentManager().findFragmentByTag("Categories"));
-                ft.add(R.id.fragment, f1,"sbc");
-//                ft.replace(R.id.fragment, f1, "sbc");
-                ft.addToBackStack("sbc");
-                ft.commit();
+
+                fragmentSongByCat.setArguments(bundl);
+
+                fragmentTransaction
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .hide(getFragmentManager().findFragmentByTag("Categories"))
+                        .add(R.id.fragment, fragmentSongByCat,"sbc")
+                        .replace(R.id.fragment, fragmentSongByCat, "sbc")
+                         .addToBackStack("sbc")
+                        .commit();
             }
         }));
 
