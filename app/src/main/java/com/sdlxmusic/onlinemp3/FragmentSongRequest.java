@@ -1,37 +1,34 @@
 package com.sdlxmusic.onlinemp3;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
 public class FragmentSongRequest extends Fragment {
-
-    private EditText editTextSongName;
-    private EditText editTextArtistName;
-    private Button songReqSubmitButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.activity_song_req, container, false);
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Button btnSongRequest =  (Button) getActivity().findViewById(R.id.btn_song_request);
+        btnSongRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "sorry..this feature will be added in next release", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
-   /* @Override
+    /* @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }

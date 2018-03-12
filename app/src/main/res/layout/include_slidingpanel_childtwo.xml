@@ -4,7 +4,7 @@
     android:id="@+id/include_sliding_panel_childtwo"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg">
+    android:background="@drawable/bg_fragment_color">
 
     <ImageView
         android:id="@+id/image_songAlbumbg"

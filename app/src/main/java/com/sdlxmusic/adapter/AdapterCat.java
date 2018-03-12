@@ -12,13 +12,14 @@ import com.sdlxmusic.item.ItemCat;
 import com.sdlxmusic.onlinemp3.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class AdapterCat extends RecyclerView.Adapter<AdapterCat.MyViewHolder> {
 
     private Context context;
-    private ArrayList<ItemCat> arrayList;
-    private ArrayList<ItemCat> filteredArrayList;
+    private List<ItemCat> arrayList;
+    private List<ItemCat> filteredArrayList;
     private NameFilter filter;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -30,7 +31,7 @@ public class AdapterCat extends RecyclerView.Adapter<AdapterCat.MyViewHolder> {
         }
     }
 
-    public AdapterCat(Context context, ArrayList<ItemCat> arrayList) {
+    public AdapterCat(Context context, List<ItemCat> arrayList) {
         this.context = context;
         this.arrayList = arrayList;
         this.filteredArrayList = arrayList;

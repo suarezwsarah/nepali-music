@@ -13,7 +13,7 @@ public class Constant implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static String SERVER_URL="http://globaljobhunter.com/";
+	public static String SERVER_URL="http://tipstechblog.com/";
 
 	public static final String URL_LATEST = SERVER_URL + "api.php?latest";
 	public static final String URL_ARTIST = SERVER_URL + "api.php?artist_list";

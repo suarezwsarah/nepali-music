@@ -315,9 +315,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.songreq_about) {
             FragmentSongRequest fragmentSongRequest = new FragmentSongRequest();
-            loadFrag(fragmentSongRequest, "songRequest", fm);
-            //Intent intent = new Intent(MainActivity.this, FragmentSongRequest.class);
-            //startActivity(intent);
+            loadFrag(fragmentSongRequest, getString(R.string.req_song), fm);
         } else if (id == R.id.nav_privacy) {
             openPrivacyDialog();
         }

@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.sdlxmusic.adapter.AdapterCat;
+import com.sdlxmusic.enums.SongLoadEnums;
 import com.sdlxmusic.item.ItemCat;
 import com.sdlxmusic.utils.Constant;
 import com.sdlxmusic.utils.JsonUtils;
@@ -30,11 +31,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FragmentCat extends Fragment {
 
     RecyclerView recyclerView;
-    ArrayList<ItemCat> arrayList;
+    List<ItemCat> itemCatList;
     AdapterCat adapterCat;
     ZProgressHUD progressHUD;
     GridLayoutManager gridLayoutManager;
@@ -43,15 +45,13 @@ public class FragmentCat extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-
         View rootView = inflater.inflate(R.layout.fragment_cat, container, false);
 
         progressHUD = ZProgressHUD.getInstance(getActivity());
         progressHUD.setMessage(getActivity().getResources().getString(R.string.loading));
         progressHUD.setSpinnerType(ZProgressHUD.FADED_ROUND_SPINNER);
 
-        arrayList = new ArrayList<>();
+        itemCatList = new ArrayList<>();
         recyclerView = (RecyclerView)rootView.findViewById(R.id.recyclerView_cat);
         gridLayoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -60,8 +60,6 @@ public class FragmentCat extends Fragment {
 
         if (JsonUtils.isNetworkAvailable(getActivity())) {
             new LoadCat().execute(Constant.URL_CAT);
-        } else {
-
         }
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
@@ -77,8 +75,8 @@ public class FragmentCat extends Fragment {
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
 
                 Bundle bundl = new Bundle();
-                bundl.putString("cid", arrayList.get(getPosition(adapterCat.getID(position))).getCategoryId());
-                bundl.putString("cname", arrayList.get(getPosition(adapterCat.getID(position))).getCategoryName());
+                bundl.putString("cid", itemCatList.get(getPosition(adapterCat.getID(position))).getCategoryId());
+                bundl.putString("cname", itemCatList.get(getPosition(adapterCat.getID(position))).getCategoryName());
 
                 fragmentSongByCat.setArguments(bundl);
 
@@ -150,26 +148,25 @@ public class FragmentCat extends Fragment {
                     String name = objJson.getString(Constant.TAG_CAT_NAME);
 
                     ItemCat objItem = new ItemCat(id,name);
-                    arrayList.add(objItem);
+                    itemCatList.add(objItem);
                 }
 
-                return "1";
+                return SongLoadEnums.SUCCESS.getItemCd();
             } catch (JSONException e) {
                 e.printStackTrace();
-                return "0";
+                return SongLoadEnums.FAIL.getItemCd();
             } catch (Exception ee) {
                 ee.printStackTrace();
-                return "0";
+                return SongLoadEnums.FAIL.getItemCd();
             }
 
         }
 
         @Override
         protected void onPostExecute(String s) {
-            if(s.equals("1")) {
+            if(s.equals(SongLoadEnums.SUCCESS.getItemCd())) {
                 progressHUD.dismissWithSuccess(getResources().getString(R.string.success));
-
-                adapterCat = new AdapterCat(getActivity(),arrayList);
+                adapterCat = new AdapterCat(getActivity(), itemCatList);
                 recyclerView.setAdapter(adapterCat);
 
             } else {
@@ -182,9 +179,9 @@ public class FragmentCat extends Fragment {
 
     private int getPosition(String id) {
         int count=0;
-        for(int i=0;i<arrayList.size();i++)
+        for(int i = 0; i< itemCatList.size(); i++)
         {
-            if(id.equals(arrayList.get(i).getCategoryId()))
+            if(id.equals(itemCatList.get(i).getCategoryId()))
             {
                 count = i;
                 break;

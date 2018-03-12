@@ -194,12 +194,6 @@ public class FragmentSongByCat extends Fragment {
         return count;
     }
 
-//    private void loadInter() {
-//        mInterstitial = new InterstitialAd(getActivity());
-//        mInterstitial.setAdUnitId(getResources().getString(R.string.admob_intertestial_id));
-//        mInterstitial.loadAd(new AdRequest.Builder().build());
-//    }
-
     private void showInter(final int pos) {
         Constant.adCount = Constant.adCount + 1;
         if(Constant.adCount % Constant.adDisplay == 0) {
